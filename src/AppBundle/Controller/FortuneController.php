@@ -18,7 +18,7 @@ class FortuneController extends Controller
             ->getManager()
             ->getRepository('AppBundle:Category');
 
-        $categories = $categoryRepository->findAllOrdered();
+        /*$categories = $categoryRepository->findAllOrdered();*/
 
         $search = $request->query->get('q');
         if ($search){
@@ -43,7 +43,9 @@ class FortuneController extends Controller
             ->getManager()
             ->getRepository('AppBundle:Category');
 
-        $category = $categoryRepository->find($id);
+        /*$category = $categoryRepository->find($id);*/
+
+        $category = $categoryRepository->findWithFortunesJoins($id);
 
         if (!$category) {
             throw $this->createNotFoundException();

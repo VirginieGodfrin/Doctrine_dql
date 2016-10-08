@@ -23,6 +23,7 @@ class FortuneCookie
 
     /**
      * @var Category
+     * fortuneCookie est propriétaire de category
      *
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="fortuneCookies")
      * @ORM\JoinColumn(nullable=false)

@@ -26,10 +26,17 @@ class CategoryRepository extends EntityRepository
 
 	public function findAllOrdered() {
 		
-		$qb = $this->createQueryBuilder('x')
-			->addOrderBy('x.name', 'DESC');
-		$query = $qb->getQuery();
+		/*$qb = $this->createQueryBuilder('x')
+			->addOrderBy('x.name', 'DESC');*/
+		/*$query = $qb->getQuery();*/
+
 		/*var_dump($query->getDQL());die;*/
+
+		$qb= $this->createQueryBuilder('cat')
+			->leftJoin('cat.fortuneCookies', 'fc') 
+			->addSelect('fc')
+			->addOrderBy('cat.name','DESC');
+		$query = $qb->getQuery();	
 
 		return $query->execute();
 	}
@@ -51,11 +58,48 @@ class CategoryRepository extends EntityRepository
 			->execute();*/
 
 		/* SELECT * FROM category WHERE name LIKE '%$val%' OR iconKey LIKE '% $val %';*/
-		return $this->createQueryBuilder('x')
+		/*return $this->createQueryBuilder('x')
 			->andWhere('x.name LIKE :searchVal OR x.iconKey LIKE :searchVal')
+			->setParameter('searchVal', '%'.$val.'%')
+			->getQuery()
+			->execute();*/
+
+		/* join */
+		/* 
+		/*	SELECT * FROM fortune_cookie LEFT JOIN category ON fortune_cookie.category_id  
+		/*			Where category_id ='4' AND category.name='pets' ; 
+		 */
+
+		return $this->createQueryBuilder('cat')
+			->andWhere('cat.name LIKE :searchVal
+				OR cat.iconKey LIKE :searchVal
+				OR fc.fortune LIKE :searchVal
+				')
+			->leftJoin('cat.fortuneCookies', 'fc') /* par rapport à l'entité et non à la table en db*/
+			->addSelect('fc')
 			->setParameter('searchVal', '%'.$val.'%')
 			->getQuery()
 			->execute();
 
+			/* category est propriétaire de la relation */
+		
+
 	}
+
+	public function findWithFortunesJoins($id){
+
+		return $this->createQueryBuilder('cat')
+			->andWhere('cat.id = :id')
+			->leftJoin('cat.fortuneCookies', 'fc') 
+			->addSelect('fc')
+			->setParameter('id', $id)
+			->getQuery()
+			->getOneOrNullResult();
+
+	}
+
+	
+
+
+
 }
