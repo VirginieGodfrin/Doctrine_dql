@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class CategoryRepository extends EntityRepository
 {
+
+	public function findAllOrdered() {
+		/*SELECT * FROM category ORDER BY name DESC;*/
+		$dq = 'SELECT x FROM AppBundle\Entity\Category x ORDER BY x.name DESC';
+		$query = $this->getEntityManager()->createQuery($dq);
+
+		/* montre sql*/
+		/*var_dump($query->getSQL());die;*/
+
+		return $query->execute();
+	}
 }
