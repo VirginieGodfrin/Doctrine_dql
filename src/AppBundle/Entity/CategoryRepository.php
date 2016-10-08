@@ -33,4 +33,29 @@ class CategoryRepository extends EntityRepository
 
 		return $query->execute();
 	}
+
+	public function search($val){
+		/* SELECT * FROM category WHERE name = $val */
+		/*return $this->createQueryBuilder('x')
+			->andWhere('x.name = :searchVal')
+			->setParameter('searchVal', $val)
+			->setParameter('searchTerm','%'.$val.'%')
+			->getQuery()
+			->execute();*/
+
+		/* SELECT * FROM category WHERE name LIKE '%$val%'; <3 */ 
+		/*return $this->createQueryBuilder('x')
+			->andWhere('x.name LIKE :searchTerm')
+			->setParameter('searchTerm','%'.$val.'%')
+			->getQuery()
+			->execute();*/
+
+		/* SELECT * FROM category WHERE name LIKE '%$val%' OR iconKey LIKE '% $val %';*/
+		return $this->createQueryBuilder('x')
+			->andWhere('x.name LIKE :searchVal OR x.iconKey LIKE :searchVal')
+			->setParameter('searchVal', '%'.$val.'%')
+			->getQuery()
+			->execute();
+
+	}
 }

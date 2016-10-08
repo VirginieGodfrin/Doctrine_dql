@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Category;
@@ -11,7 +12,7 @@ class FortuneController extends Controller
     /**
      * @Route("/", name="homepage")
      */
-    public function homepageAction()
+    public function homepageAction(Request $request)
     {
         $categoryRepository = $this->getDoctrine()
             ->getManager()
@@ -19,9 +20,18 @@ class FortuneController extends Controller
 
         $categories = $categoryRepository->findAllOrdered();
 
+        $search = $request->query->get('q');
+        if ($search){
+            $categories = $categoryRepository->search($search);
+        }else{
+            $categories = $categoryRepository->findAllOrdered();
+        }
+
         return $this->render('fortune/homepage.html.twig',[
             'categories' => $categories
         ]);
+
+
     }
 
     /**
