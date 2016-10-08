@@ -13,13 +13,23 @@ use Doctrine\ORM\EntityRepository;
 class CategoryRepository extends EntityRepository
 {
 
-	public function findAllOrdered() {
+	public function findAllOrderedOne() {
 		/*SELECT * FROM category ORDER BY name DESC;*/
 		$dq = 'SELECT x FROM AppBundle\Entity\Category x ORDER BY x.name DESC';
 		$query = $this->getEntityManager()->createQuery($dq);
 
 		/* montre sql*/
 		/*var_dump($query->getSQL());die;*/
+
+		return $query->execute();
+	}
+
+	public function findAllOrdered() {
+		
+		$qb = $this->createQueryBuilder('x')
+			->addOrderBy('x.name', 'DESC');
+		$query = $qb->getQuery();
+		/*var_dump($query->getDQL());die;*/
 
 		return $query->execute();
 	}
