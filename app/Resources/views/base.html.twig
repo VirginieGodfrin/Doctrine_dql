@@ -7,7 +7,6 @@
             <title>{% block title %}Fortune Queries{% endblock %}</title>
 
            <!-- stylez -->
-           <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
            <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
            <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
            <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -30,9 +29,7 @@
                 </div>
             </form>
 
-            <a href="{{ path ('homepage') }}">
-                <img class="logo center-block" src={{ asset('images/fortune-logo.png') }}>
-            </a>
+            <a class="btn" href="{{ path ('homepage') }}">Home page</a>
         </div>
         {% block body %}{% endblock %}
         <footer class="footer">

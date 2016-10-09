@@ -82,6 +82,10 @@ class CategoryRepository extends EntityRepository
 			->execute();
 
 			/* category est propriétaire de la relation */
+			/* addSelect : select toutes les categories & tout les fortunesCookie,
+			 * ajoute un parametre à SELECT 
+			 */
+
 		
 
 	}

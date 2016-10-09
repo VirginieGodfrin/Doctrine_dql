@@ -8,10 +8,13 @@
                     <thead class="header-bkgrnd">
                         <tr>
                             <th>
-                               <span class="fa {{ category.iconKey }}"></span> {{ category.name }} 
+                               <span class="fa {{ category.iconKey }}"></span> 
+                               {{categaotyName}} 
                             </th>
                             <th>
-                               Printed History
+                               Printed History: ( {{fortunePrinted|number_format}} total \\ {{fortuneAverage|number_format}} AVG )
+                               
+    
                             </th>
                         </tr>
                     </thead>

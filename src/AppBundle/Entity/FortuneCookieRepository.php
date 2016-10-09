@@ -12,4 +12,28 @@ use Doctrine\ORM\EntityRepository;
  */
 class FortuneCookieRepository extends EntityRepository
 {
+	
+
+	public function CountNumberPrintedForCategory(Category $category){
+		return $this->CreateQueryBuilder('fc')
+				->andWhere('fc.category = :category')
+				->setParameter('category', $category)
+				->innerJoin('fc.category','cat')
+				->select('SUM(fc.numberPrinted) as fortunePrinted, AVG(fc.numberPrinted) as fortuneAverage, cat.name')
+				->getQuery()
+				->getOneOrNullResult();
+	}
+				
 }
+
+/*public function CountNumberPrintedForCategory(Category $category){
+		return $this->CreateQueryBuilder('fc')
+				->andWhere('fc.category = :category')
+				->setParameter('category', $category)
+				->select('SUM(fc.numberPrinted) as fortunePrinted')
+				->getQuery()
+				/*->getOneOrNullResult();*/
+				/*->getSingleScalarResult();*/ 
+					/*selection un champ dans un colonne*/
+
+	/*}*/
