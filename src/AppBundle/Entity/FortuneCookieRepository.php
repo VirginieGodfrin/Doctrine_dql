@@ -15,6 +15,21 @@ class FortuneCookieRepository extends EntityRepository
 	
 
 	public function CountNumberPrintedForCategory(Category $category){
+
+		$conn = $this->getEntityManager()
+				->getConnection();
+		$sql = 'SELECT SUM(fc.numberPrinted) as fortunePrinted, AVG(fc.numberPrinted) as fortuneAverage, cat.name
+				FROM fortune_cookie fc
+				INNER JOIN category cat ON cat.id = fc.category_id
+				WHERE fc.category_id = :category
+				';
+		$stmt = $conn->prepare($sql);
+		$stmt->execute(array('category' => $category->getId()));
+
+		/*var_dump($stmt->fetch()); die;*/		
+
+		return $stmt->fetch();
+
 		return $this->CreateQueryBuilder('fc')
 				->andWhere('fc.category = :category')
 				->setParameter('category', $category)
