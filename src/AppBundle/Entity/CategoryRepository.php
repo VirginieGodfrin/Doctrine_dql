@@ -14,96 +14,52 @@ class CategoryRepository extends EntityRepository
 {
 
 	public function findAllOrderedOne() {
-		/*SELECT * FROM category ORDER BY name DESC;*/
 		$dq = 'SELECT x FROM AppBundle\Entity\Category x ORDER BY x.name DESC';
 		$query = $this->getEntityManager()->createQuery($dq);
-
-		/* montre sql*/
-		/*var_dump($query->getSQL());die;*/
-
 		return $query->execute();
 	}
 
-	public function findAllOrdered() {
-		
-		/*$qb = $this->createQueryBuilder('x')
-			->addOrderBy('x.name', 'DESC');*/
-		/*$query = $qb->getQuery();*/
+	private function addFortuneCookieJoinSelect($qb){
+		return $qb->leftJoin('cat.fortuneCookies', 'fc')->addSelect('fc');
+	}
 
-		/*var_dump($query->getDQL());die;*/
-
-		$qb= $this->createQueryBuilder('cat')
-			->leftJoin('cat.fortuneCookies', 'fc') 
-			->addSelect('fc')
+	public function findAllOrdered(){
+		$qb = $this->createQueryBuilder('cat')
 			->addOrderBy('cat.name','DESC');
-		$query = $qb->getQuery();	
 
+		$this->addFortuneCookieJoinSelect($qb);
+
+		$query = $qb->getQuery();
+			
 		return $query->execute();
 	}
 
 	public function search($val){
-		/* SELECT * FROM category WHERE name = $val */
-		/*return $this->createQueryBuilder('x')
-			->andWhere('x.name = :searchVal')
-			->setParameter('searchVal', $val)
-			->setParameter('searchTerm','%'.$val.'%')
-			->getQuery()
-			->execute();*/
-
-		/* SELECT * FROM category WHERE name LIKE '%$val%'; <3 */ 
-		/*return $this->createQueryBuilder('x')
-			->andWhere('x.name LIKE :searchTerm')
-			->setParameter('searchTerm','%'.$val.'%')
-			->getQuery()
-			->execute();*/
-
-		/* SELECT * FROM category WHERE name LIKE '%$val%' OR iconKey LIKE '% $val %';*/
-		/*return $this->createQueryBuilder('x')
-			->andWhere('x.name LIKE :searchVal OR x.iconKey LIKE :searchVal')
-			->setParameter('searchVal', '%'.$val.'%')
-			->getQuery()
-			->execute();*/
-
-		/* join */
-		/* 
-		/*	SELECT * FROM fortune_cookie LEFT JOIN category ON fortune_cookie.category_id  
-		/*			Where category_id ='4' AND category.name='pets' ; 
-		 */
-
-		return $this->createQueryBuilder('cat')
+		$qb = $this->createQueryBuilder('cat')
 			->andWhere('cat.name LIKE :searchVal
 				OR cat.iconKey LIKE :searchVal
 				OR fc.fortune LIKE :searchVal
 				')
-			->leftJoin('cat.fortuneCookies', 'fc') /* par rapport à l'entité et non à la table en db*/
-			->addSelect('fc')
-			->setParameter('searchVal', '%'.$val.'%')
+			->setParameter('searchVal', '%'.$val.'%');
+
+		$this->addFortuneCookieJoinSelect($qb);
+			
+		return $qb	
 			->getQuery()
 			->execute();
-
-			/* category est propriétaire de la relation */
-			/* addSelect : select toutes les categories & tout les fortunesCookie,
-			 * ajoute un parametre à SELECT 
-			 */
-
-		
-
 	}
 
 	public function findWithFortunesJoins($id){
-
-		return $this->createQueryBuilder('cat')
+		$qb = $this->createQueryBuilder('cat')
 			->andWhere('cat.id = :id')
-			->leftJoin('cat.fortuneCookies', 'fc') 
-			->addSelect('fc')
-			->setParameter('id', $id)
+			->setParameter('id', $id);
+
+		$this->addFortuneCookieJoinSelect($qb);
+
+		return $qb
 			->getQuery()
 			->getOneOrNullResult();
 
 	}
-
-	
-
-
 
 }
