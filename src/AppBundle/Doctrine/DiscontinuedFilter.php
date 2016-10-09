@@ -2,17 +2,26 @@
 
 namespace AppBundle\Doctrine;
 
-use Doctrine\ORM\Mapping\ClassMetaData;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 
 class DiscontinuedFilter extends SQLFilter
 {
-	public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias){
-		/*var_dump($targetEntity);die;*/
-		if (!$targetEntity->getReflectionClass()->name!='AppBundle\Entity\FortuneCookie') {
-            return "";
+    /**
+     * Gets the SQL query part to add to a query.
+     *
+     * @param ClassMetaData $targetEntity
+     * @param string $targetTableAlias
+     *
+     * @return string The constraint SQL if there is available, empty string otherwise.
+     */
+    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
+    {
+        if ($targetEntity->getReflectionClass()->name != 'AppBundle\Entity\FortuneCookie') {
+            return '';
         }
-        return sprintf('%s.discontinued = %s', $targetTableAlias, $this->getRarameter('discontinued'));
-	}
 
+        return sprintf('%s.discontinued = %s', $targetTableAlias, $this->getParameter('discontinued'));
+    }
 }
+
